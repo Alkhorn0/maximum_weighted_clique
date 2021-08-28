@@ -1,7 +1,7 @@
 package maximum_weighted_clique;
 import java.util.*;
 import java.io.*;
-public class clique {
+public class clique2 {
 	long deadline;				// 제한시간
 	int cnt = 0;				// 분기 수
 	int Vnbr, Enbr;				// 정점의 수, 변의 수
@@ -26,10 +26,10 @@ public class clique {
 		long TIME_LIMIT = 3600 * clockPerSecond;
 		int switch_number = 0;
 		Scanner scanner = new Scanner(System.in);
-		new clique(scanner, TIME_LIMIT, switch_number);
+		new clique2(scanner, TIME_LIMIT, switch_number);
 	}
 	
-	public clique(Scanner sc, long limit, int switchNum) throws IOException{
+	public clique2(Scanner sc, long limit, int switchNum) throws IOException{
 		this.switch_number = switchNum;
 		graph(sc);		// 그래프 정보 구축
 		
@@ -64,11 +64,11 @@ public class clique {
 		currentSize = 0;
 		currentWeight = recordWeight = 0;
 		deadline = limit + startTime;
-		expand(Vnbr, vset, upper);
+		expand(Vnbr, vset, upper, degree);
 		printRecord();
 	}
 	
-	void expand(int n, int[] vset, int[] upper) {
+	void expand(int n, int[] vset, int[] upper, int[] degree) {
 		if(++cnt % 1000 == 0) {
 			if(System.nanoTime() >= deadline) {
 				System.out.println("time over");
@@ -91,7 +91,7 @@ public class clique {
 			int n2 = 0;
 			boolean[] adjv = adj[v];
 			for(int j = i+1; j < n; j++) {
-				if(adjv[vset[j]]) {
+				if((adjv[vset[j]])&((degree[v]*wt[v])*0.5 < (degree[vset[j]]*wt[vset[j]]))) {
 					vset2[n2++] = vset[j];
 				}
 			}
@@ -104,17 +104,12 @@ public class clique {
 					recordWeight = currentWeight;
 					printRecord();
 				}
-				// v에 인접하는 정점이 있다면 재귀를 통해 더 작은 클리크로 분할
 			}
+			// v에 인접하는 정점이 있다면 재귀를 통해 더 작은 클리크로 분할
 			else {
 					int[] upper2 = new int[n2+1];
-					if(n2 <= switch_number) { // 인접요소가 switch_number보다 적은 경우
-						numberSort2(n2, vset2, upper2);
-					}
-					else {	// 인접요소가 많은 경우
-						numberSort(n2, vset2, upper2);
-					}
-					expand(n2, vset2, upper2);
+					numberSort(n2, vset2, upper2);
+					expand(n2, vset2, upper2, degree);
 				}
 			// 재귀를 감안한 처리(선택한 v를 제거)
 			currentSize--;
@@ -156,6 +151,7 @@ public class clique {
 		}
 	}
 	
+	/*
 	// 최장로의 길이를 계산한다. 
 	void numberSort2(int n, int[] vset, int[] upper) {
 		// 더미 정점을 삽입
@@ -205,7 +201,7 @@ public class clique {
 			upper[0] = pval;
 		}
 	}
-	
+	*/
 	// 그래프 input
 	void graph(Scanner fp) {
 		Vnbr = fp.nextInt();				// 정점수 입력
