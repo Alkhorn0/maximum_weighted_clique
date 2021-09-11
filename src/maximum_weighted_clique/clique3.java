@@ -26,7 +26,7 @@ public class clique3 {
 		long TIME_LIMIT = 3600 * clockPerSecond;
 		int switch_number = 0;
 		Scanner scanner = new Scanner(System.in);
-		new clique2(scanner, TIME_LIMIT, switch_number);
+		new clique3(scanner, TIME_LIMIT, switch_number);
 	}
 	
 	public clique3(Scanner sc, long limit, int switchNum) throws IOException{
@@ -91,7 +91,7 @@ public class clique3 {
 			int n2 = 0;
 			boolean[] adjv = adj[v];
 			for(int j = i+1; j < n; j++) {
-				if((adjv[vset[j]])&(Math.pow(degree[v]*wt[v], 0.81) < (degree[vset[j]]*wt[vset[j]]))) {
+				if((adjv[vset[j]])&(Math.pow(degree[v]*wt[v], 0.25) < (degree[vset[j]]*wt[vset[j]]))) {
 					vset2[n2++] = vset[j];
 				}
 			}
