@@ -2,16 +2,16 @@ package maximum_weighted_clique;
 import java.util.*;
 import java.io.*;
 public class clique3 {
-	long deadline;				// Á¦ÇÑ½Ã°£
-	int cnt = 0;				// ºÐ±â ¼ö
-	int Vnbr, Enbr;				// Á¤Á¡ÀÇ ¼ö, º¯ÀÇ ¼ö
-	boolean[][] adj, nadj;		// ÀÎÁ¢Çà·Ä, º¸±×·¡ÇÁ
-	int[] wt;					// Á¤Á¡ÀÇ °¡ÁßÄ¡ ¸®½ºÆ®
-	int[] current;				// ÇöÀçÀÇ clique
-	int currentSize;			// ÇöÀçÀÇ clique¿¡ Æ÷ÇÔµÈ Á¤Á¡ÀÇ °³¼ö
-	int currentWeight;			// ÇöÀçÀÇ clique¿¡ Æ÷ÇÔµÇ´Â Á¤Á¡ÀÇ °¡ÁßÄ¡ÀÇ ÇÕ
+	long deadline;				// ï¿½ï¿½ï¿½Ñ½Ã°ï¿½
+	int cnt = 0;				// ï¿½Ð±ï¿½ ï¿½ï¿½
+	int Vnbr, Enbr;				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+	boolean[][] adj, nadj;		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½×·ï¿½ï¿½ï¿½
+	int[] wt;					// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½Æ®
+	int[] current;				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ clique
+	int currentSize;			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ cliqueï¿½ï¿½ ï¿½ï¿½ï¿½Ôµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	int currentWeight;			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ cliqueï¿½ï¿½ ï¿½ï¿½ï¿½ÔµÇ´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½
 	int[] record = new int[0];	// best clique
-	int recordWeight;			// best clique¿¡ Æ÷ÇÔµÇ´Â Á¤Á¡ÀÇ °¡ÁßÄ¡ÀÇ ÇÕ(ÃÖÁ¾ ÃÖÀå·ÎÀÇ ±æÀÌ)
+	int recordWeight;			// best cliqueï¿½ï¿½ ï¿½ï¿½ï¿½ÔµÇ´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
 	int switch_number;
 	
 	long startTime;
@@ -31,15 +31,15 @@ public class clique3 {
 	
 	public clique3(Scanner sc, long limit, int switchNum) throws IOException{
 		this.switch_number = switchNum;
-		graph(sc);		// ±×·¡ÇÁ Á¤º¸ ±¸Ãà
+		graph(sc);		// ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		
 		// start clock
 		startTime = System.nanoTime();
 		
-		// °¢ Á¤Á¡ÀÇ Â÷¼ö¸¦ °è»ê
+		// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 		int[] degree = new int[Vnbr];
 		for(int i = 0; i < Vnbr; i++) {
-			// Á¤Á¡ iÀÇ Â÷¼ö °è»ê
+			// ï¿½ï¿½ï¿½ï¿½ iï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 			for(int j = 0; j < Vnbr; j++) {
 				if(adj[i][j]) {
 					++degree[i];
@@ -47,14 +47,14 @@ public class clique3 {
 			}
 		}
 		
-		// Á¤Á¡À» Â÷¼öÀÇ ³»¸²Â÷¼øÀ¸·Î Á¤·Ä
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		int[] vset = new int[Vnbr+1];
 		for(int i = 0; i < Vnbr; i++) {
 			degree[i] = Vnbr*degree[i] + i;
 		}
 		Arrays.sort(degree);
 		for(int i = 0; i < Vnbr; i++) {
-			vset[Vnbr-1-i] = degree[i]%Vnbr;		// vset-> Â÷¼ö¸¦ ±âÁØÀ¸·Î ³»¸²Â÷¼ø Â÷¼ö°¡ °°´Ù¸é Á¤Á¡ ¹øÈ£ÀÇ Å©±â°¡ Å«°Ô ¸ÕÀú ¿È
+			vset[Vnbr-1-i] = degree[i]%Vnbr;		// vset-> ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ Å©ï¿½â°¡ Å«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 		}
 		int[] upper = new int[Vnbr+1];
 		numberSort(Vnbr, vset, upper);
@@ -77,16 +77,16 @@ public class clique3 {
 		}
 		
 		for(int i = 0; i < n; i++) {
-			// Àç±Í Å»Ãâ Á¶°Ç(»ó°è Å×½ºÆ®) v=vset[i] ¸¦ ¼±ÅÃÇÏÁö ¾Ê´Â °æ¿ì
+			// ï¿½ï¿½ï¿½ Å»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®) v=vset[i] ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´ï¿½ ï¿½ï¿½ï¿½
 			if(currentWeight + upper[i] <= recordWeight) {
 				return;
 			}
-			// v¸¦ ¼±ÅÃÇÏ´Â °æ¿ì
+			// vï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½
 			int v = vset[i];
 			current[currentSize++] = v;
 			currentWeight += wt[v];
 			
-			// v¿¡ ÀÎÁ¢ÇÏ´Â Á¤Á¡ÀÇ ¸®½ºÆ® vset2, Áßº¹ ¹æÁö ¹× ´õ¹Ì¿ä¼Ò »ðÀÔÀ» À§ÇØ Å©±â´Â Vnbr(n)-i
+			// vï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® vset2, ï¿½ßºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ï¿½ Vnbr(n)-i
 			int[] vset2 = new int[n-i];
 			int n2 = 0;
 			boolean[] adjv = adj[v];
@@ -95,9 +95,9 @@ public class clique3 {
 					vset2[n2++] = vset[j];
 				}
 			}
-			// v¿¡ ÀÎÁ¢ÇÏ´Â Á¤Á¡ÀÌ ¾ø´Â °æ¿ì (º¯°æ ÇØ¾ßµÉ ºÎºÐ)
+			// vï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½Ø¾ßµï¿½ ï¿½Îºï¿½)
 			if(n2 == 0) {
-				// ÃÖÀûÇØÀÇ °»½Å
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 				if(recordWeight < currentWeight) {
 					record = new int[currentSize];
 					System.arraycopy(current, 0, record, 0, currentSize);
@@ -105,22 +105,22 @@ public class clique3 {
 					printRecord();
 				}
 			}
-			// v¿¡ ÀÎÁ¢ÇÏ´Â Á¤Á¡ÀÌ ÀÖ´Ù¸é Àç±Í¸¦ ÅëÇØ ´õ ÀÛÀº Å¬¸®Å©·Î ºÐÇÒ
+			// vï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ù¸ï¿½ ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			else {
 					int[] upper2 = new int[n2+1];
 					numberSort(n2, vset2, upper2);
 					expand(n2, vset2, upper2, degree);
 				}
-			// Àç±Í¸¦ °¨¾ÈÇÑ Ã³¸®(¼±ÅÃÇÑ v¸¦ Á¦°Å)
+			// ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ vï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
 			currentSize--;
 			currentWeight -= wt[v];
 		}
 	}
 	
 	
-	// ÃÖÀå·ÎÀÇ ±æÀÌ°¡ °¡´ÉÇÑ ÀÛ°Ô µÇµµ·Ï  vsetÀ» Á¤·Ä
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Û°ï¿½ ï¿½Çµï¿½ï¿½ï¿½  vsetï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	void numberSort(int n, int[] vset, int[] upper) {
-		// upperÀÇ ÃÊ±âÈ­
+		// upperï¿½ï¿½ ï¿½Ê±ï¿½È­
 		for(int i = 0; i < n; i++) {
 			upper[i] = wt[vset[i]];
 		}
@@ -134,14 +134,14 @@ public class clique3 {
 					sval = pval;
 				}
 			}
-			// u = Â÷¼ö¿Í Á¤Á¡ÀÇ ¹øÈ£°¡ °¡Àå ÀÛÀº Á¤Á¡ÀÇ ¹øÈ£ (ex: {0: 1, 1: 10 ,2: 1} ÀÏ¶§ u = 0)
+			// u = ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ (ex: {0: 1, 1: 10 ,2: 1} ï¿½Ï¶ï¿½ u = 0)
 			int u = vset[s];
 			vset[s] = vset[i];
 			vset[i] = u;
 			upper[s] = upper[i];
 			upper[i] = sval;
 			
-			// u¿¡ ÀÎÁ¢ÇÏ´Â ¿ä¼ÒÀÇ °ªÀ» °»½Å (uÀÇ °¡ÁßÄ¡ + vÀÇ °¡ÁßÄ¡)
+			// uï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (uï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡ + vï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡)
 			for(int j = i-1; j >= 0; j--) {
 				int v = vset[j];
 				if (adj[u][v]) {
@@ -152,14 +152,14 @@ public class clique3 {
 	}
 	
 	/*
-	// ÃÖÀå·ÎÀÇ ±æÀÌ¸¦ °è»êÇÑ´Ù. 
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½. 
 	void numberSort2(int n, int[] vset, int[] upper) {
-		// ´õ¹Ì Á¤Á¡À» »ðÀÔ
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		vset[n] = Vnbr;
 		upper[n] = 0;
 		
-		int p = vset[n-1];	// dummyÁ¤Á¡À» Á¦¿ÜÇÑ °¡ÁßÄ¡°¡ °¡Àå ÀÛÀº Á¤Á¡ÀÇ ¹øÈ£ = p
-		int pval = wt[p];	// pÀÇ °¡ÁßÄ¡ = pval
+		int p = vset[n-1];	// dummyï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ = p
+		int pval = wt[p];	// pï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡ = pval
 		
 		for(int i = n-1; i >= 1; i--) {
 			int q = vset[i-1];
@@ -169,9 +169,9 @@ public class clique3 {
 			while(nadjq[vset[j++]]);
 			int qval = upper[j] + wt[q];
 			
-			// °ªÀÌ ÀÛÀº ÂÊÀ» vset[i] ¿¡ ³Ö´Â´Ù
+			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ vset[i] ï¿½ï¿½ ï¿½Ö´Â´ï¿½
 			if(pval < qval) {
-				// p¸¦ »ðÀÔ
+				// pï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 				for(j = i+1; pval < upper[j]; j++) {
 					vset[j-1] = vset[j];
 					upper[j-1] = upper[j];
@@ -179,12 +179,12 @@ public class clique3 {
 				vset[j-1] = p;
 				upper[j-1] = pval;
 				
-				//pvalÀ» °»½Å
+				//pvalï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 				pval = (!nadjq[p]) && (qval < pval + wt[q]) ? pval + wt[q] : qval;
 				p = q;
 			}
 			else {
-				// q¸¦ »ðÀÔ
+				// qï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 				for(j = i+1; qval < upper[j]; j++) {
 					vset[j-1] = vset[j];
 					upper[j-1] = upper[j];
@@ -192,7 +192,7 @@ public class clique3 {
 				vset[j-1] = q;
 				upper[j-1] = qval;
 				
-				// pvalÀ» °»½Å
+				// pvalï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 				if((!nadjq[p]) && pval < qval + wt[p]) {
 					pval = qval + wt[p];
 				}
@@ -202,10 +202,10 @@ public class clique3 {
 		}
 	}
 	*/
-	// ±×·¡ÇÁ input
+	// ï¿½×·ï¿½ï¿½ï¿½ input
 	void graph(Scanner fp) {
-		Vnbr = fp.nextInt();				// Á¤Á¡¼ö ÀÔ·Â
-		Enbr = fp.nextInt();				// º¯ÀÇ ¼ö ÀÔ·Â
+		Vnbr = fp.nextInt();				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½
+		Enbr = fp.nextInt();				// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ô·ï¿½
 		adj = new boolean[Vnbr+1][];
 		nadj = new boolean[Vnbr+1][];
 		wt = new int[Vnbr+1];
@@ -213,25 +213,25 @@ public class clique3 {
 			adj[i] = new boolean[Vnbr+1];
 			nadj[i] = new boolean[Vnbr+1];
 		}
-		// empty graph »ý¼º
+		// empty graph ï¿½ï¿½ï¿½ï¿½
 		for(int i = 0; i < Vnbr; i++) {
 			Arrays.fill(adj[i], false);
 			Arrays.fill(nadj[i], true);
 		}
 		for(int i = 0; i < Vnbr; i++) {
-			int weight = fp.nextInt();		// °¡ÁßÄ¡ ÀÔ·Â
-			int deg = fp.nextInt();			// Â÷¼ö ÀÔ·Â
-			wt[i] = weight;					// Á¤Á¡ iÀÇ °¡ÁßÄ¡
-			// Á¤Á¡ iÀÇ ¿¬°á Á¤º¸
+			int weight = fp.nextInt();		// ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½Ô·ï¿½
+			int deg = fp.nextInt();			// ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½
+			wt[i] = weight;					// ï¿½ï¿½ï¿½ï¿½ iï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡
+			// ï¿½ï¿½ï¿½ï¿½ iï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			for(int j = 0; j < deg; j++) {
 				int entry = fp.nextInt();
 				adj[i][entry] = true;
 				nadj[i][entry] = false;
 			}
-			adj[i][Vnbr] = adj[Vnbr][i] = true;			// dummyÁ¤Á¡ ÀÔ·Â
-			nadj[i][Vnbr] = nadj[Vnbr][i] = false;		// dummyÁ¤Á¡ ÀÔ·Â
+			adj[i][Vnbr] = adj[Vnbr][i] = true;			// dummyï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½
+			nadj[i][Vnbr] = nadj[Vnbr][i] = false;		// dummyï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½
 		}
-		wt[Vnbr] = 0;		// dummy Á¤Á¡ÀÇ °¡ÁßÄ¡ = 0
+		wt[Vnbr] = 0;		// dummy ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡ = 0
 	}
 
 }
