@@ -1,7 +1,5 @@
 package maximum_weighted_clique;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -40,21 +38,8 @@ public class LDSQueue {
     public static void main(String[] args) throws IOException {
         long TIME_LIMIT = 60 * clockPermilliSecond * 1000;
         int switch_number = 70;
-
-        /* read input */
-        switch (args.length) {
-        default:
-            System.err.printf("Usage: java %s infile [switch_number [time_limit]]\n", progname);
-            System.exit(1);
-        case 3 :
-            TIME_LIMIT = Integer.parseInt(args[2]) * clockPermilliSecond;
-        case 2 :
-            switch_number = Integer.parseInt(args[1]);
-        case 1 :
-            break;
-        }
         Scanner scanner
-            = new Scanner(new BufferedReader(new FileReader(args[0])));
+            = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
         new LDSQueue(scanner, TIME_LIMIT, switch_number);
     }
 

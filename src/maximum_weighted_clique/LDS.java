@@ -1,13 +1,10 @@
 package maximum_weighted_clique;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class LDS {
 
-    static String progname = "Ky2LDS";
     long deadline;   // ��������
     long cnt = 0; // ���}��
     int Vnbr, Enbr;          /* number of vertices/edges */
@@ -26,29 +23,15 @@ public class LDS {
 
     void printRecord() {
         double time = 1.0* (System.nanoTime() - startTime) / (clockPermilliSecond);
-        System.out.printf("%s,%.2f,%d,%d,%s\n", progname, time, recordWeight,
-                          cnt, Arrays.toString(record));
-        ;
+        System.out.printf("%.5f, %d, %d, %s\n", time, recordWeight,cnt, Arrays.toString(record));
     }
 
     public static void main(String[] args) throws IOException {
         long TIME_LIMIT = 60 * clockPermilliSecond * 1000;
-        int switch_number = 70;
+        int switch_number = 0;
 
-        /* read input */
-        switch (args.length) {
-        default:
-            System.err.printf("Usage: java %s infile [switch_number [time_limit]]\n", progname);
-            System.exit(1);
-        case 3 :
-            TIME_LIMIT = Integer.parseInt(args[2]) * clockPermilliSecond;
-        case 2 :
-            switch_number = Integer.parseInt(args[1]);
-        case 1 :
-            break;
-        }
         Scanner scanner
-            = new Scanner(new BufferedReader(new FileReader(args[0])));
+            = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
         new LDS(scanner, TIME_LIMIT, switch_number);
     }
 
@@ -127,7 +110,7 @@ public class LDS {
          */
         if(++cnt % 1000 == 0) {
             if(System.nanoTime() >= deadline) {
-                System.out.printf("%s,time over\n", progname);
+                System.out.printf("time over\n");
                 System.exit(0);
             }
         }
@@ -176,7 +159,7 @@ public class LDS {
                     record = new int[currentSize];
                     System.arraycopy(current, 0, record, 0, currentSize);
                     recordWeight = currentWeight;
-                   printRecord();
+                    printRecord();
                 }
             } else {
 
@@ -185,7 +168,7 @@ public class LDS {
                 //if(n2 <= switch_number) {
                 //    numberSort2(n2, vset2, upper2);
                 //} else {
-                    numberSort(n2, vset2, upper2);
+                numberSort(n2, vset2, upper2);
                 //}
                 if(i > 0) {
                 	--d;
