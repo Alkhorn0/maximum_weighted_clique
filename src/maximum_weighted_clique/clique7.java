@@ -142,6 +142,8 @@ public class clique7 {
             int sval = upper[t];
 			vset[t] = vset[i];
 			vset[i] = u;
+            value[t] = value[i];
+            value[i] = tval;
 			upper[t] = upper[i];
 			upper[i] = sval;
 			
