@@ -26,20 +26,20 @@ public class LDSQueue {
     int a =1;
 
     long startTime;
-    static long clockPermilliSecond = 1000000;
+    static long clockPerSecond = 1000000000;
 
     void printRecord() {
-        double time = 1.0* (System.nanoTime() - startTime) / (clockPermilliSecond);
+        double time = 1.0* (System.nanoTime() - startTime) / (clockPerSecond);
         System.out.printf("%s,%.2f,%d,%d,%s\n", progname, time, recordWeight,
                           cnt, Arrays.toString(record));
         ;
     }
 
     public static void main(String[] args) throws IOException {
-        long TIME_LIMIT = 60 * clockPermilliSecond * 1000;
+        long TIME_LIMIT = 3600 * clockPerSecond;
         int switch_number = 70;
         Scanner scanner
-            = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
+            = new Scanner(new BufferedReader(new FileReader("C:\\Users\\김영재\\1000_0.5_1_10.txt")));
         new LDSQueue(scanner, TIME_LIMIT, switch_number);
     }
 
