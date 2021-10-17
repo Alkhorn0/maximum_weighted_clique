@@ -16,10 +16,10 @@ public class LDSQueueSortPriority {
     int[] record = new int[0]; /* best clique so far */
     int recordWeight;   /* weight of best clique */
     int switch_number;
-    Queue vsetqueue = new LinkedList();   //������������L���[
-    Queue currentqueue = new LinkedList();  //���݌`�����̃N���[�N�Ɋ܂܂�钸�_������L���[
-    int[] vsettmp;  //�L���[������o����������������z��
-    int[] currenttmp;  //�L���[������o�������݌`�����̃N���[�N�Ɋ܂܂�钸�_�W��������z��
+    Queue vsetqueue = new LinkedList();   //부분문제를 넣는 큐
+    Queue currentqueue = new LinkedList();  //현재 형성중인 클리크에 포함되는 정점을 넣는 큐
+    int[] vsettmp;  //큐에서 빼낸 부분 문제를 넣는 배열
+    int[] currenttmp;  //큐에서 빼낸 현재 형성중인 클리크에 포함되는 정점집합을 넣는 배열
     int a =1;
 
     long startTime;
@@ -36,7 +36,7 @@ public class LDSQueueSortPriority {
         long TIME_LIMIT = 600 * clockPerSecond;
         int switch_number = 70;
         Scanner scanner
-            = new Scanner(new BufferedReader(new FileReader("C:\\Users\\김영재\\1000_0.8_1_10.txt")));
+            = new Scanner(new BufferedReader(new FileReader("C:\\Users\\lobby\\1000_0.7_1_10.txt")));
         new LDSQueueSortPriority(scanner, TIME_LIMIT, switch_number);
     }
 
@@ -77,7 +77,7 @@ public class LDSQueueSortPriority {
             vset[Vnbr - 1 - i] = degree[i] % Vnbr;
         }
 
-        vset[Vnbr] = -1;  //���_�W�����󂩂���ʂ��邽�߂�-�P����
+        vset[Vnbr] = -1;  //정점 집합이 비어있는지 구분하기 위한 -1 대입
         //System.out.println(vset[Vnbr]);
         // ��E�����邽�߂̔z��Dvset �� upper �����_�����P����
         // �̂́C�_�~�[���_�i�d�݂O�őS���_�ɗאځj�����邷���ԁD
@@ -93,39 +93,30 @@ public class LDSQueueSortPriority {
         deadline = limit + startTime;
         expand(Vnbr, vset, upper,current, degree);
         //printRecord();
-
-        // �L���[���畔���������o����LDS��D=1�ŒT�����s��
+        System.out.println('x');
+        // 큐에서 부분문제를 빼내어 LDS의 D=1에서 탐색진행
         while(true){
-        	//�L���[����ɂȂ�ΏI��
+        	// 큐가 비면 종료
         	if(vsetqueue.peek() == null){
         		break;
         		}
-        	vsettmp = (int [])vsetqueue.poll(); //�����������o��
-        	currenttmp = (int [])currentqueue.poll(); //���݌`�����̃N���[�N�����o��
+        	vsettmp = (int [])vsetqueue.poll(); // 부분문제를 빼냄
+        	currenttmp = (int [])currentqueue.poll(); // 현재 형성중인 클리크를 빼냄
         	//System.out.print("  vsettmp = [");
-        	int vsetnum = 0; //�������̒��_��
+        	int vsetnum = 0; //부분문제의 정점수
         	for(int i = 0; i < vsettmp.length; i++){
-        		//System.out.print(vsettmp[i]);
-        		//System.out.print(",");
         		if(vsettmp[i] != -1 && vsettmp[i] != Vnbr){
-        			vsetnum++; //�������̔z�񂪁C��łȂ��C���_�~�[���_�łȂ����+1
+        			vsetnum++; //부분 문제의 배열이 비어있지 않고, 더미 정점도 아니라면 + 1
         		}
         	}
-        	/*System.out.print("]");
-        	System.out.println();
-        	System.out.print("  currenttmp = [");
-        	for(int i = 0; i < currenttmp.length; i++){
-        		System.out.print(currenttmp[i]);
-        		System.out.print(",");
-        	System.out.print("]");
-        	System.out.println();}*/
-        	if(vsettmp[0] != Vnbr && vsettmp[0] != -1) { //������肪��łȂ��ꍇ�ȉ������s
-        		if(currenttmp.length == 0){ //���݌`�����̃N���[�N���Ȃ���΁C�N���[�N�̃T�C�Y�Əd����������
+        	
+        	if(vsettmp[0] != Vnbr && vsettmp[0] != -1) { // 부분문제가 비어있지 않으면, 
+        		if(currenttmp.length == 0){ // 현재 형성중인 클리크가 없다면, 클리크 사이즈와 가중치를 초기화
         			currentSize = 0;
         			currentWeight = 0;
         		}
         		//numberSort(vsetnum, vsettmp, upper);
-        		expand(vsetnum,vsettmp,upper,currenttmp, degree); //�������ƌ��݌`�����̃N���[�N�����
+        		expand(vsetnum,vsettmp,upper,currenttmp, degree); // 부분 문제와 현재 형성중인 클리크를 입력
         	}
         }
         printRecord();
@@ -246,53 +237,19 @@ public class LDSQueueSortPriority {
             }
             //System.out.println(vset.length-1);
             
-            //���݌`�����̃N���[�N��current2�Ƃ���
+            //현재 형성중인 클리크를 current2라 한다.
             int[] current2 = new int[currentSize-1];
             for(int k = 0; k < current2.length; k++){
             	current2[k] = current[k];
             }
 
-            if(vset3.length != 0) { //�������̒��_�W��������ꍇ�ȉ������s
+            if(vset3.length != 0) { //부분 문제의 정점집합이 있는 경우 이하를 실행
 	            vsetqueue.offer(vset3);
 	            currentqueue.offer(current2);
             }
-            /*
-            System.out.print("  vset = [");
-        	for(int i1 = 0; i1 < vset.length; i1++){
-        		System.out.print(vset[i1]);
-        		System.out.print(",");
-        	}
-        	System.out.print("]");
-        	System.out.println();
-
-            System.out.print("  vset2 = [");
-        	for(int i2 = 0; i2 < vset2.length; i2++){
-        		System.out.print(vset2[i2]);
-        		System.out.print(",");
-        	}
-        	System.out.print("]");
-        	System.out.println();
-
-        	System.out.print("  vset3 = [");
-        	for(int i3 = 0; i3 < vset3.length; i3++){
-        		System.out.print(vset3[i3]);
-        		System.out.print(",");
-        	}
-        	System.out.print("]");
-        	System.out.println();
-
-        	System.out.println("currenSize = " + currentSize + "currentWeight = " + currentWeight);
-
-        	System.out.print("  current = [");
-        	for(int c = 0; c < current.length; c++){
-        		System.out.print(current[c]);
-        		System.out.print(",");
-        	}
-        	System.out.print("]");
-        	System.out.println();*/
-
-            if(n2 == 0) { // ���}�ɂ�����u�t�v�̏���
-                // �œK���̍X�V
+        
+            if(n2 == 0) { // 분기에서의 '잎'의 처리
+                // 갱신작업
                 if(recordWeight < currentWeight) {
                     record = new int[currentSize];
                     System.arraycopy(current, 0, record, 0, currentSize);
@@ -301,14 +258,14 @@ public class LDSQueueSortPriority {
                 }
             } else {
 
-                // �ċA�Ăяo���D��E�v�Z�̕��@�͒��_���ɂ���Č��߂�D
+                // 재귀호출 
                 int[] upper2 = new int[n2+1];
                 //if(n2 <= switch_number) {
                  //   numberSort2(n2, vset2, upper2);
                 //} else {
-                    numberSort(n2, vset2, upper2);
+                numberSort(n2, vset2, upper2);
                 //}
-                    expand(n2, vset2, upper2,current, degree);
+                expand(n2, vset2, upper2,current, degree);
             }
             --currentSize;
             currentWeight -= wt[v];
