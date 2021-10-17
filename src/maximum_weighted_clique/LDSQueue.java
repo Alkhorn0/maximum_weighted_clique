@@ -30,16 +30,16 @@ public class LDSQueue {
 
     void printRecord() {
         double time = 1.0* (System.nanoTime() - startTime) / (clockPerSecond);
-        System.out.printf("%s,%.2f,%d,%d,%s\n", progname, time, recordWeight,
-                          cnt, Arrays.toString(record));
+        System.out.printf("%.5f,%d,%d\n", time, recordWeight,
+                          cnt);
         ;
     }
 
     public static void main(String[] args) throws IOException {
-        long TIME_LIMIT = 3600 * clockPerSecond;
+        long TIME_LIMIT = 600 * clockPerSecond;
         int switch_number = 70;
         Scanner scanner
-            = new Scanner(new BufferedReader(new FileReader("C:\\Users\\김영재\\1000_0.5_1_10.txt")));
+            = new Scanner(new BufferedReader(new FileReader("C:\\Users\\김영재\\1000_0.7_1_10.txt")));
         new LDSQueue(scanner, TIME_LIMIT, switch_number);
     }
 
@@ -102,7 +102,7 @@ public class LDSQueue {
         	//�L���[����ɂȂ�ΏI��
         	if(vsetqueue.peek() == null){
         		break;
-        		}
+        	}
         	vsettmp = (int [])vsetqueue.poll(); //�����������o��
         	currenttmp = (int [])currentqueue.poll(); //���݌`�����̃N���[�N�����o��
         	//System.out.print("  vsettmp = [");

@@ -23,9 +23,9 @@ public class clique {
 	}
 	
 	public static void main(String[] args) throws IOException{
-		long TIME_LIMIT = 3600 * clockPerSecond;
+		long TIME_LIMIT = 600 * clockPerSecond;
 		int switch_number = 0;
-		Scanner scanner = new Scanner(new BufferedReader(new FileReader("C:\\Users\\±è¿µÀç\\1000_0.5_1_10.txt")));
+		Scanner scanner = new Scanner(new BufferedReader(new FileReader("C:\\Users\\±è¿µÀç\\1000_0.7_1_10.txt")));
 		new clique(scanner, TIME_LIMIT, switch_number);
 	}
 	

@@ -2,16 +2,16 @@ package maximum_weighted_clique;
 import java.io.IOException;
 import java.util.*;
 public class clique7 {
-    long deadline;				// ���ѽð�
-	int cnt = 0;				// �б� ��
-	int Vnbr, Enbr;				// ������ ��, ���� ��
-	boolean[][] adj, nadj;		// �������, ���׷���
-	int[] wt;					// ������ ����ġ ����Ʈ
-	int[] current;				// ������ clique
-	int currentSize;			// ������ clique�� ���Ե� ������ ����
-	int currentWeight;			// ������ clique�� ���ԵǴ� ������ ����ġ�� ��
+    long deadline;				// 占쏙옙占싼시곤옙
+	int cnt = 0;				// 占싻깍옙 占쏙옙
+	int Vnbr, Enbr;				// 占쏙옙占쏙옙占쏙옙 占쏙옙, 占쏙옙占쏙옙 占쏙옙
+	boolean[][] adj, nadj;		// 占쏙옙占쏙옙占쏙옙占�, 占쏙옙占쌓뤄옙占쏙옙
+	int[] wt;					// 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙치 占쏙옙占쏙옙트
+	int[] current;				// 占쏙옙占쏙옙占쏙옙 clique
+	int currentSize;			// 占쏙옙占쏙옙占쏙옙 clique占쏙옙 占쏙옙占쌉듸옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙
+	int currentWeight;			// 占쏙옙占쏙옙占쏙옙 clique占쏙옙 占쏙옙占쌉되댐옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙치占쏙옙 占쏙옙
 	int[] record = new int[0];	// best clique
-	int recordWeight;			// best clique�� ���ԵǴ� ������ ����ġ�� ��(���� ������� ����)
+	int recordWeight;			// best clique占쏙옙 占쏙옙占쌉되댐옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙치占쏙옙 占쏙옙(占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙占� 占쏙옙占쏙옙)
 	int switch_number;
 	
 	long startTime;
@@ -31,15 +31,15 @@ public class clique7 {
 	
 	public clique7(Scanner sc, long limit, int switchNum) throws IOException{
 		this.switch_number = switchNum;
-		graph(sc);		// �׷��� ���� ����
+		graph(sc);		// 占쌓뤄옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙
 		
 		// start clock
 		startTime = System.nanoTime();
 		
-		// �� ������ ������ ���
+		// 占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占�
 		int[] degree = new int[Vnbr];
 		for(int i = 0; i < Vnbr; i++) {
-			// ���� i�� ���� ���
+			// 占쏙옙占쏙옙 i占쏙옙 占쏙옙占쏙옙 占쏙옙占�
 			for(int j = 0; j < Vnbr; j++) {
 				if(adj[i][j]) {
 					++degree[i];
@@ -47,14 +47,14 @@ public class clique7 {
 			}
 		}
 		
-		// ������ ������ ������������ ����
+		// 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙
 		int[] vset = new int[Vnbr+1];
 		for(int i = 0; i < Vnbr; i++) {
 			degree[i] = Vnbr*degree[i] + i;
 		}
 		Arrays.sort(degree);
 		for(int i = 0; i < Vnbr; i++) {
-			vset[Vnbr-1-i] = degree[i]%Vnbr;		// vset-> ������ �������� �������� ������ ���ٸ� ���� ��ȣ�� ũ�Ⱑ ū�� ���� ��
+			vset[Vnbr-1-i] = degree[i]%Vnbr;		// vset-> 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쌕몌옙 占쏙옙占쏙옙 占쏙옙호占쏙옙 크占썩가 큰占쏙옙 占쏙옙占쏙옙 占쏙옙
 		}
 		int[] upper = new int[Vnbr+1];
         int[] value = new int[Vnbr+1];
@@ -78,16 +78,16 @@ public class clique7 {
 		}
 		
 		for(int i = 0; i < n; i++) {
-			// ��� Ż�� ����(��� �׽�Ʈ) v=vset[i] �� �������� �ʴ� ���
+			// 占쏙옙占� 탈占쏙옙 占쏙옙占쏙옙(占쏙옙占� 占쌓쏙옙트) v=vset[i] 占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙 占십댐옙 占쏙옙占�
 			if(currentWeight + upper[i] <= recordWeight) {
 				return;
 			}
-			// v�� �����ϴ� ���
+			// v占쏙옙 占쏙옙占쏙옙占싹댐옙 占쏙옙占�
 			int v = vset[i];
 			current[currentSize++] = v;
 			currentWeight += wt[v];
 			
-			// v�� �����ϴ� ������ ����Ʈ vset2, �ߺ� ���� �� ���̿�� ������ ���� ũ��� Vnbr(n)-i
+			// v占쏙옙 占쏙옙占쏙옙占싹댐옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙트 vset2, 占쌩븝옙 占쏙옙占쏙옙 占쏙옙 占쏙옙占싱울옙占� 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙 크占쏙옙占� Vnbr(n)-i
 			int[] vset2 = new int[n-i];
 			int n2 = 0;
 			boolean[] adjv = adj[v];
@@ -96,9 +96,9 @@ public class clique7 {
 					vset2[n2++] = vset[j];
 				}
 			}
-			// v�� �����ϴ� ������ ���� ��� (���� �ؾߵ� �κ�)
+			// v占쏙옙 占쏙옙占쏙옙占싹댐옙 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占� (占쏙옙占쏙옙 占쌔야듸옙 占싸븝옙)
 			if(n2 == 0) {
-				// �������� ����
+				// 占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙
 				if(recordWeight < currentWeight) {
 					record = new int[currentSize];
 					System.arraycopy(current, 0, record, 0, currentSize);
@@ -106,23 +106,23 @@ public class clique7 {
 					printRecord();
 				}
 			}
-			// v�� �����ϴ� ������ �ִٸ� ��͸� ���� �� ���� Ŭ��ũ�� ����
+			// v占쏙옙 占쏙옙占쏙옙占싹댐옙 占쏙옙占쏙옙占쏙옙 占쌍다몌옙 占쏙옙拷占� 占쏙옙占쏙옙 占쏙옙 占쏙옙占쏙옙 클占쏙옙크占쏙옙 占쏙옙占쏙옙
 			else {
 					int[] upper2 = new int[n2+1];
                     int[] value2 = new int[n2+1];
 					numberSort(n2, vset2, upper2, value2, degree);
 					expand(n2, vset2, upper2, value2, degree);
 				}
-			// ��͸� ������ ó��(������ v�� ����)
+			// 占쏙옙拷占� 占쏙옙占쏙옙占쏙옙 처占쏙옙(占쏙옙占쏙옙占쏙옙 v占쏙옙 占쏙옙占쏙옙)
 			currentSize--;
 			currentWeight -= wt[v];
 		}
 	}
 	
 	
-	// ������� ���̰� ������ �۰� �ǵ���  vset�� ����
+	// 占쏙옙占쏙옙占쏙옙占� 占쏙옙占싱곤옙 占쏙옙占쏙옙占쏙옙 占쌜곤옙 占실듸옙占쏙옙  vset占쏙옙 占쏙옙占쏙옙
 	void numberSort(int n, int[] vset, int[] upper, int[] value, int[] degree) {
-		// upper�� �ʱ�ȭ
+		// upper占쏙옙 占십깍옙화
 		for(int i = 0; i < n; i++) {
 			upper[i] = wt[vset[i]];
             value[i] = wt[vset[i]]*degree[vset[i]];
@@ -137,7 +137,7 @@ public class clique7 {
 					tval = pval;
 				}
 			}
-			// u = ������ ������ ��ȣ�� ���� ���� ������ ��ȣ (ex: {0: 1, 1: 10 ,2: 1} �϶� u = 0)
+			// u = 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙호占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占쏙옙호 (ex: {0: 1, 1: 10 ,2: 1} 占싹띰옙 u = 0)
 			int u = vset[t];
             int sval = upper[t];
 			vset[t] = vset[i];
@@ -147,7 +147,7 @@ public class clique7 {
 			upper[t] = upper[i];
 			upper[i] = sval;
 			
-			// u�� �����ϴ� ����� ���� ���� (u�� ����ġ + v�� ����ġ)
+			// u占쏙옙 占쏙옙占쏙옙占싹댐옙 占쏙옙占쏙옙占� 占쏙옙占쏙옙 占쏙옙占쏙옙 (u占쏙옙 占쏙옙占쏙옙치 + v占쏙옙 占쏙옙占쏙옙치)
 			for(int j = i-1; j >= 0; j--) {
 				int v = vset[j];
 				if (adj[u][v]) {
@@ -157,10 +157,10 @@ public class clique7 {
 		}
 	}
 
-	// �׷��� input
+	// 占쌓뤄옙占쏙옙 input
 	void graph(Scanner fp) {
-		Vnbr = fp.nextInt();				// ������ �Է�
-		Enbr = fp.nextInt();				// ���� �� �Է�
+		Vnbr = fp.nextInt();				// 占쏙옙占쏙옙占쏙옙 占쌉뤄옙
+		Enbr = fp.nextInt();				// 占쏙옙占쏙옙 占쏙옙 占쌉뤄옙
 		adj = new boolean[Vnbr+1][];
 		nadj = new boolean[Vnbr+1][];
 		wt = new int[Vnbr+1];
@@ -168,25 +168,25 @@ public class clique7 {
 			adj[i] = new boolean[Vnbr+1];
 			nadj[i] = new boolean[Vnbr+1];
 		}
-		// empty graph ����
+		// empty graph 占쏙옙占쏙옙
 		for(int i = 0; i < Vnbr; i++) {
 			Arrays.fill(adj[i], false);
 			Arrays.fill(nadj[i], true);
 		}
 		for(int i = 0; i < Vnbr; i++) {
-			int weight = fp.nextInt();		// ����ġ �Է�
-			int deg = fp.nextInt();			// ���� �Է�
-			wt[i] = weight;					// ���� i�� ����ġ
-			// ���� i�� ���� ����
+			int weight = fp.nextInt();		// 占쏙옙占쏙옙치 占쌉뤄옙
+			int deg = fp.nextInt();			// 占쏙옙占쏙옙 占쌉뤄옙
+			wt[i] = weight;					// 占쏙옙占쏙옙 i占쏙옙 占쏙옙占쏙옙치
+			// 占쏙옙占쏙옙 i占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙
 			for(int j = 0; j < deg; j++) {
 				int entry = fp.nextInt();
 				adj[i][entry] = true;
 				nadj[i][entry] = false;
 			}
-			adj[i][Vnbr] = adj[Vnbr][i] = true;			// dummy���� �Է�
-			nadj[i][Vnbr] = nadj[Vnbr][i] = false;		// dummy���� �Է�
+			adj[i][Vnbr] = adj[Vnbr][i] = true;			// dummy占쏙옙占쏙옙 占쌉뤄옙
+			nadj[i][Vnbr] = nadj[Vnbr][i] = false;		// dummy占쏙옙占쏙옙 占쌉뤄옙
 		}
-		wt[Vnbr] = 0;		// dummy ������ ����ġ = 0
+		wt[Vnbr] = 0;		// dummy 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙치 = 0
 	}
 
 }

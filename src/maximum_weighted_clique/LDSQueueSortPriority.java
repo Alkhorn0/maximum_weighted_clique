@@ -1,10 +1,10 @@
 package maximum_weighted_clique;
 import java.io.*;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 
-public class LDS {
+public class LDSQueueSortPriority {
 
+    static String progname = "Ky2memorySorting";
     long deadline;   // ��������
     long cnt = 0; // ���}��
     int Vnbr, Enbr;          /* number of vertices/edges */
@@ -16,23 +16,28 @@ public class LDS {
     int[] record = new int[0]; /* best clique so far */
     int recordWeight;   /* weight of best clique */
     int switch_number;
-    int a = 1;
+    Queue vsetqueue = new LinkedList();   //������������L���[
+    Queue currentqueue = new LinkedList();  //���݌`�����̃N���[�N�Ɋ܂܂�钸�_������L���[
+    int[] vsettmp;  //�L���[������o����������������z��
+    int[] currenttmp;  //�L���[������o�������݌`�����̃N���[�N�Ɋ܂܂�钸�_�W��������z��
+    int a =1;
 
     long startTime;
     static long clockPerSecond = 1000000000;
 
     void printRecord() {
         double time = 1.0* (System.nanoTime() - startTime) / (clockPerSecond);
-        System.out.printf("%.5f, %d, %d, %s\n", time, recordWeight,cnt, Arrays.toString(record));
+        System.out.printf("%.5f,%d,%d\n", time, recordWeight,
+                          cnt);
+        ;
     }
 
     public static void main(String[] args) throws IOException {
         long TIME_LIMIT = 600 * clockPerSecond;
-        int switch_number = 0;
-
+        int switch_number = 70;
         Scanner scanner
-        	= new Scanner(new BufferedReader(new FileReader("C:\\Users\\김영재\\1000_0.7_1_10.txt")));
-        new LDS(scanner, TIME_LIMIT, switch_number);
+            = new Scanner(new BufferedReader(new FileReader("C:\\Users\\김영재\\1000_0.8_1_10.txt")));
+        new LDSQueueSortPriority(scanner, TIME_LIMIT, switch_number);
     }
 
     /**
@@ -42,7 +47,7 @@ public class LDS {
      * @param limit �������ԁD
      * @param switchNum ��̏�E�v�Z�@��؂�ւ��钸�_�����w�肷��D
      */
-    public LDS(Scanner sc, long limit, int switchNum) throws IOException {
+    public LDSQueueSortPriority(Scanner sc, long limit, int switchNum) throws IOException {
         this.switch_number = switchNum;
         graph(sc);
 
@@ -72,6 +77,8 @@ public class LDS {
             vset[Vnbr - 1 - i] = degree[i] % Vnbr;
         }
 
+        vset[Vnbr] = -1;  //���_�W�����󂩂���ʂ��邽�߂�-�P����
+        //System.out.println(vset[Vnbr]);
         // ��E�����邽�߂̔z��Dvset �� upper �����_�����P����
         // �̂́C�_�~�[���_�i�d�݂O�őS���_�ɗאځj�����邷���ԁD
         // numberSort �̓_�~�[���_���g�����ԕ��@��p���Ă���C
@@ -84,14 +91,44 @@ public class LDS {
         currentSize = 0;
         currentWeight = recordWeight = 0;
         deadline = limit + startTime;
+        expand(Vnbr, vset, upper,current, degree);
+        //printRecord();
 
-		// expand�ɂO����Vnbr��LDS������(5/16�p�])
-		for(int i = 0; i <= Vnbr; i++) {
-		    expand(Vnbr, vset, upper, i);
-		}
-	
-		printRecord();
-		System.out.println("------end--------");
+        // �L���[���畔���������o����LDS��D=1�ŒT�����s��
+        while(true){
+        	//�L���[����ɂȂ�ΏI��
+        	if(vsetqueue.peek() == null){
+        		break;
+        		}
+        	vsettmp = (int [])vsetqueue.poll(); //�����������o��
+        	currenttmp = (int [])currentqueue.poll(); //���݌`�����̃N���[�N�����o��
+        	//System.out.print("  vsettmp = [");
+        	int vsetnum = 0; //�������̒��_��
+        	for(int i = 0; i < vsettmp.length; i++){
+        		//System.out.print(vsettmp[i]);
+        		//System.out.print(",");
+        		if(vsettmp[i] != -1 && vsettmp[i] != Vnbr){
+        			vsetnum++; //�������̔z�񂪁C��łȂ��C���_�~�[���_�łȂ����+1
+        		}
+        	}
+        	/*System.out.print("]");
+        	System.out.println();
+        	System.out.print("  currenttmp = [");
+        	for(int i = 0; i < currenttmp.length; i++){
+        		System.out.print(currenttmp[i]);
+        		System.out.print(",");
+        	System.out.print("]");
+        	System.out.println();}*/
+        	if(vsettmp[0] != Vnbr && vsettmp[0] != -1) { //������肪��łȂ��ꍇ�ȉ������s
+        		if(currenttmp.length == 0){ //���݌`�����̃N���[�N���Ȃ���΁C�N���[�N�̃T�C�Y�Əd����������
+        			currentSize = 0;
+        			currentWeight = 0;
+        		}
+        		//numberSort(vsetnum, vsettmp, upper);
+        		expand(vsetnum,vsettmp,upper,currenttmp, degree); //�������ƌ��݌`�����̃N���[�N�����
+        	}
+        }
+        printRecord();
     }
 
     /**
@@ -100,9 +137,7 @@ public class LDS {
      * @param vset �������̒��_�W��
      * @param upper ��E�̒l
      */
-
-    //expand�Ɉ���d��ǉ�(5/16�p�])
-    public void expand(int n, int[] vset, int[] upper, int d) {
+    public void expand(int n, int[] vset, int[] upper, int[] currentx, int[] degree) {
 
         /*
          * 1000���1��C���Ԑ؂ꂩ�ǂ������`�F�b�N����
@@ -110,32 +145,42 @@ public class LDS {
          */
         if(++cnt % 1000 == 0) {
             if(System.nanoTime() >= deadline) {
-                System.out.printf("time over\n");
+                System.out.printf("%s,time over\n", progname);
+                printRecord();
                 System.exit(0);
             }
         }
-
         //if( ((System.nanoTime() - startTime) / (clockPermilliSecond))/10 == a){
         //	a++;
-        //	printRecord();
+       // 	printRecord();
         //}
+
+        if(currentx.length != 0) { //���݌`�����̃N���[�N���Ȃ���Έȉ������s
+        	if(currentx.length != (Vnbr + 1)) { //1��ڂ�expand�ȊO�ȉ������s
+        		currentSize = 0;
+        		currentWeight = 0;
+        	for(int i = 0; i < currentx.length; i++){
+        		current[currentSize++] = currentx[i];
+        		currentWeight += wt[currentx[i]];
+        	}
+        	}
+        }
+
 
         // vset[i+1],..., vset[n-1] �̂����C
         // vset[i] �ɗאڂ�����̂̂ݍl����D
-	// d�񂾂��E�Ɉړ�����(5/16�p�])
-        for(int i = 0; i < d; ++i) {
+        for(int i = 0; i < 1; ++i) {
 
             // ��E�e�X�g
             if(currentWeight + upper[i] <= recordWeight) {
                 return;
             }
 
+            //System.out.println("aaa");
             // v ��I������ꍇ���l����B
             int v = vset[i];
             current[currentSize++] = v;
             currentWeight += wt[v];
-
-            //System.out.println("aaa");
 
             // vset[i+1],..., vset[n-1] �̂����C
             // v �ɗאڂ��钸�_����Ȃ�n�� vset2 ��
@@ -143,17 +188,110 @@ public class LDS {
             // �_�~�[�v�f�����邽�߂ɁA
             // n-i �������悤�ɂ���B
             int[] vset2 = new int[n-i];
+           // Arrays.fill(vset2,-1);
             int n2 = 0;
             boolean[] adjv = adj[v];
             for(int j = i + 1; j < n; ++j) {
                 if(adjv[vset[j]]) {
                     vset2[n2++] = vset[j];
+                  
                 }
             }
+            //System.out.println("vset2.length = " + vset2.length);
+            //System.out.println("n2 = " + n2);
 
+            //vset����I�΂Ȃ��������_(vset[0]�ȊO�̒��_)��vset3�Ƃ���
+            /*
+            int[] vset3 = new int[vset.length - 1];
+            Arrays.fill(vset3,-1);
+            for(int k = 0; k < vset3.length; k++){
+            	vset3[k] = vset[k + 1];
+            	if(vset3[k] == -1) {
+            		break;
+            	}
+            	for(int p = k-1; p >= 0; p--) {
+            		int temp = vset3[p];
+            		if ((wt[temp] < wt[vset3[k]])&&(degree[temp] < degree[vset3[k]])) {
+            			vset3[p] = vset3[k];
+            			vset3[k] = temp;
+            		}
+            	}
+            }*/
+            //System.out.println(vset.length);
+            int[] vset3 = new int[vset.length-1];
+            if (vset.length > 1) {
+            	
+            	PriorityQueue<Integer> vset4 = new PriorityQueue<>(vset.length-1, new Comparator<Integer>() {
+            		
+            		@Override
+            		public int compare(Integer o1, Integer o2) {
+            			if((wt[o1] < wt[o2])&&(degree[o1] < degree[o2])) {
+            				return -1;
+            			}
+            			//else if((wt[o1] > wt[o2])&&(degree[o1] > degree[o2])){
+            				//return 1;
+            			//}
+            			return 0;
+            		}
+            	});
+            	for(int k = 0; k < vset.length-1; k++) {
+            		if(vset[k+1] == -1) break;
+            		vset4.offer(vset[k+1]);
+            	}
+            	int size = vset4.size();
+            	//System.out.println(vset4);
+            	for(int t = 0; t < size; t++) { // 방안1. size제한 -> 값 대폭 손해
+            		vset3[t] = vset4.poll();
+            	}
+            }
+            //System.out.println(vset.length-1);
+            
+            //���݌`�����̃N���[�N��current2�Ƃ���
+            int[] current2 = new int[currentSize-1];
+            for(int k = 0; k < current2.length; k++){
+            	current2[k] = current[k];
+            }
+
+            if(vset3.length != 0) { //�������̒��_�W��������ꍇ�ȉ������s
+	            vsetqueue.offer(vset3);
+	            currentqueue.offer(current2);
+            }
+            /*
+            System.out.print("  vset = [");
+        	for(int i1 = 0; i1 < vset.length; i1++){
+        		System.out.print(vset[i1]);
+        		System.out.print(",");
+        	}
+        	System.out.print("]");
+        	System.out.println();
+
+            System.out.print("  vset2 = [");
+        	for(int i2 = 0; i2 < vset2.length; i2++){
+        		System.out.print(vset2[i2]);
+        		System.out.print(",");
+        	}
+        	System.out.print("]");
+        	System.out.println();
+
+        	System.out.print("  vset3 = [");
+        	for(int i3 = 0; i3 < vset3.length; i3++){
+        		System.out.print(vset3[i3]);
+        		System.out.print(",");
+        	}
+        	System.out.print("]");
+        	System.out.println();
+
+        	System.out.println("currenSize = " + currentSize + "currentWeight = " + currentWeight);
+
+        	System.out.print("  current = [");
+        	for(int c = 0; c < current.length; c++){
+        		System.out.print(current[c]);
+        		System.out.print(",");
+        	}
+        	System.out.print("]");
+        	System.out.println();*/
 
             if(n2 == 0) { // ���}�ɂ�����u�t�v�̏���
-
                 // �œK���̍X�V
                 if(recordWeight < currentWeight) {
                     record = new int[currentSize];
@@ -166,17 +304,11 @@ public class LDS {
                 // �ċA�Ăяo���D��E�v�Z�̕��@�͒��_���ɂ���Č��߂�D
                 int[] upper2 = new int[n2+1];
                 //if(n2 <= switch_number) {
-                //    numberSort2(n2, vset2, upper2);
+                 //   numberSort2(n2, vset2, upper2);
                 //} else {
-                numberSort(n2, vset2, upper2);
+                    numberSort(n2, vset2, upper2);
                 //}
-                if(i > 0) {
-                	--d;
-                }
-                expand(n2, vset2, upper2, d);
-                if(i > 0) {
-                	++d;
-            	}
+                    expand(n2, vset2, upper2,current, degree);
             }
             --currentSize;
             currentWeight -= wt[v];

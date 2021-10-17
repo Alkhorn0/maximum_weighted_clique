@@ -1,3 +1,8 @@
 eclipse.preferences.version=1
 encoding//src/maximum_weighted_clique/LDS.java=UTF-8
 encoding//src/maximum_weighted_clique/LDSQueue.java=UTF-8
+encoding//src/maximum_weighted_clique/LDSQueueSort.java=UTF-8
+encoding//src/maximum_weighted_clique/LDSQueueSortPriority.java=UTF-8
+encoding//src/maximum_weighted_clique/LDSQueueTry.java=UTF-8
+encoding//src/maximum_weighted_clique/LDStry.java=UTF-8
+encoding//src/maximum_weighted_clique/clique7.java=UTF-8
