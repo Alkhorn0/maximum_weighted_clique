@@ -21,10 +21,12 @@ public class LDSQueueSortPriority {
     int[] vsettmp;  //큐에서 빼낸 부분 문제를 넣는 배열
     int[] currenttmp;  //큐에서 빼낸 현재 형성중인 클리크에 포함되는 정점집합을 넣는 배열
     int a =1;
-
+    
     long startTime;
     static long clockPerSecond = 1000000000;
 
+    int[] vset3; // 실험
+    
     void printRecord() {
         double time = 1.0* (System.nanoTime() - startTime) / (clockPerSecond);
         System.out.printf("%.5f,%d,%d\n", time, recordWeight,
@@ -36,7 +38,7 @@ public class LDSQueueSortPriority {
         long TIME_LIMIT = 600 * clockPerSecond;
         int switch_number = 70;
         Scanner scanner
-            = new Scanner(new BufferedReader(new FileReader("C:\\Users\\lobby\\1000_0.7_1_10.txt")));
+            = new Scanner(new BufferedReader(new FileReader("C:\\Users\\김영재\\1000_0.8_1_10.txt")));
         new LDSQueueSortPriority(scanner, TIME_LIMIT, switch_number);
     }
 
@@ -93,13 +95,14 @@ public class LDSQueueSortPriority {
         deadline = limit + startTime;
         expand(Vnbr, vset, upper,current, degree);
         //printRecord();
-        System.out.println('x');
+        //System.out.println('x');
         // 큐에서 부분문제를 빼내어 LDS의 D=1에서 탐색진행
         while(true){
         	// 큐가 비면 종료
         	if(vsetqueue.peek() == null){
         		break;
         		}
+        	
         	vsettmp = (int [])vsetqueue.poll(); // 부분문제를 빼냄
         	currenttmp = (int [])currentqueue.poll(); // 현재 형성중인 클리크를 빼냄
         	//System.out.print("  vsettmp = [");
@@ -116,6 +119,7 @@ public class LDSQueueSortPriority {
         			currentWeight = 0;
         		}
         		//numberSort(vsetnum, vsettmp, upper);
+        		//System.out.println(vsetqueue.size());
         		expand(vsetnum,vsettmp,upper,currenttmp, degree); // 부분 문제와 현재 형성중인 클리크를 입력
         	}
         }
@@ -179,7 +183,7 @@ public class LDSQueueSortPriority {
             // �_�~�[�v�f�����邽�߂ɁA
             // n-i �������悤�ɂ���B
             int[] vset2 = new int[n-i];
-           // Arrays.fill(vset2,-1);
+            Arrays.fill(vset2,-1);
             int n2 = 0;
             boolean[] adjv = adj[v];
             for(int j = i + 1; j < n; ++j) {
@@ -209,7 +213,7 @@ public class LDSQueueSortPriority {
             	}
             }*/
             //System.out.println(vset.length);
-            int[] vset3 = new int[vset.length-1];
+            vset3 = new int[vset.length-1];
             if (vset.length > 1) {
             	
             	PriorityQueue<Integer> vset4 = new PriorityQueue<>(vset.length-1, new Comparator<Integer>() {
@@ -227,6 +231,7 @@ public class LDSQueueSortPriority {
             	});
             	for(int k = 0; k < vset.length-1; k++) {
             		if(vset[k+1] == -1) break;
+            		if(vset4.contains(0) && vset[k+1]==0) continue;		// 10/23 추가 
             		vset4.offer(vset[k+1]);
             	}
             	int size = vset4.size();
@@ -265,7 +270,7 @@ public class LDSQueueSortPriority {
                 //} else {
                 numberSort(n2, vset2, upper2);
                 //}
-                expand(n2, vset2, upper2,current, degree);
+                expand(n2, vset2, upper2, current, degree);
             }
             --currentSize;
             currentWeight -= wt[v];

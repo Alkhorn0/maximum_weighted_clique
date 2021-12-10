@@ -208,6 +208,7 @@ public class LDSQueue {
             Arrays.fill(vset3,-1);
             for(int k = 0; k < vset3.length; k++){
             	vset3[k] = vset[k + 1];
+            	System.out.println("vset[k+1]: "+vset[k+1] +" k: " + k);
             	if(vset3[k] == -1) {
             		break;
             	}
